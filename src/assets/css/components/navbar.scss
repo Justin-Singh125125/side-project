@@ -31,6 +31,30 @@
         &--add{
             margin-right: auto;
         }
+
+    }
+
+    &__user{
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: start;
+    }
+
+    &__logout{
+        margin-top: 2rem;
+        width: 100%;
+        border: none;
+        background: transparent;
+        box-shadow: 0 .5rem 4rem rgba(black, .1);
+        padding: 1rem 0;
+        opacity: 0;
+        transition: all .2s;
+        cursor: pointer;
+    }
+
+    &__logout__dropdown{
+        opacity: 1;
     }
 
 
@@ -44,6 +68,7 @@
         height: 8rem;
         border-radius: 50%;
         margin-left: 2rem;
+        cursor: pointer;
     }
 
 }
