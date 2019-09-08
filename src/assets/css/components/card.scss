@@ -1,0 +1,26 @@
+.card{
+    padding: 4rem;
+    box-shadow: 0 2rem 4rem rgba(black, .2);
+
+
+    &__name{
+        text-align: center;
+        font-size: 2rem;
+        font-weight: 300;
+        border-bottom: 1px solid $color-grey-dark;
+    }
+
+    ul{
+        text-align: center;
+
+        li{
+            text-decoration: none;
+            list-style: none;
+            font-size: 2rem;
+            font-weight: 300;
+            color: green;
+        }
+    }
+
+}
+

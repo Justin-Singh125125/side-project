@@ -3,6 +3,10 @@ import { db } from "../../firebase/config";
 
 import Navbar from "../../components/Navbar";
 import Popup from "../../components/Popup";
+import Card from "../../components/Card";
+
+import Grid from "../../layouts/Grid";
+import { generateKeyPair } from "crypto";
 class Home extends React.Component {
 
     state = {
@@ -14,13 +18,19 @@ class Home extends React.Component {
         isCredit: false,
 
         cardBalance: 0,
-        cardName: 0
+        cardName: 0,
+
+        cardData: [],
+
+        creditCardData: [],
+        debitCardData: []
     }
 
     componentDidMount() {
 
         this.handleCheckUser();
         this.handleGetUserData();
+        this.handleGetCards();
     }
 
     handleCreateCard = () => {
@@ -30,6 +40,7 @@ class Home extends React.Component {
         }
 
         db.collection("cards").add({
+            id: this.handleGenerateKey(),
             foreignKey: localStorage.getItem("id"),
             name: this.state.cardName,
             cardBalance: this.state.cardBalance,
@@ -39,6 +50,7 @@ class Home extends React.Component {
         })
         //close the popup
         this.handlePopup();
+        this.handleGetCards();
     }
 
     handleCheckUser = () => {
@@ -61,6 +73,31 @@ class Home extends React.Component {
                 name: querySnapshot.docs[0].data().name,
                 img: querySnapshot.docs[0].data().photo
             })
+
+        })
+    }
+
+    handleGetCards = () => {
+        db.collection("cards").where("foreignKey", "==", localStorage.getItem("id")).get().then((querySnapshot) => {
+
+            var creditCardData = [];
+            var debitCardData = [];
+            querySnapshot.docs.forEach(d => {
+
+
+                if (d.data().isCredit) {
+                    creditCardData.push(d.data());
+                }
+                else {
+                    debitCardData.push(d.data())
+                }
+            })
+            this.setState({
+                creditCardData: creditCardData,
+                debitCardData: debitCardData
+
+            })
+            console.log(this.state.cardData)
 
         })
     }
@@ -109,7 +146,9 @@ class Home extends React.Component {
     }
 
 
-
+    handleGenerateKey = () => {
+        return '_' + Math.random().toString(36).substr(2, 9);
+    }
 
     render() {
         return (
@@ -122,6 +161,35 @@ class Home extends React.Component {
                     handleLogout={this.handleLogout}
                     handlePopup={this.handlePopup}
                 />
+
+                <Grid>
+                    <section className="section-card">
+                        {this.state.creditCardData.map((d) => (
+
+                            <Card
+                                key={d.id}
+                                id={d.id}
+                                name={d.name}
+                                isCredit={d.isCredit}
+                                cardBalance={d.cardBalance}
+                            />
+
+                        ))}
+
+                        {this.state.debitCardData.map((d) => (
+
+                            <Card
+                                key={d.id}
+                                id={d.id}
+                                name={d.name}
+                                isCredit={d.isCredit}
+                                cardBalance={d.cardBalance}
+                            />
+
+                        ))}
+                    </section>
+
+                </Grid>
 
                 <Popup
                     openPopup={this.state.openPopup}
